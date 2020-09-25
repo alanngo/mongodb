@@ -1,6 +1,3 @@
-from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
-
 
 # 1 collection in a database
 class Collection:
@@ -13,12 +10,6 @@ class Collection:
         return count
 
     def __init__(self, db, document):
-
-        # if host or port is not None:
-        #     cluster = MongoClient(host, port)
-        # else:
-        #     cluster = MongoClient(url)
-        # db = cluster[database]
         self.__collection = db[document]
 
     # retrieval functions
@@ -82,7 +73,7 @@ class Collection:
             stub = {'_id': id}
             stub.update(entity)
             self.default_add(stub)
-        except DuplicateKeyError:
+        except Exception:
             raise RuntimeError(f"Duplicate keys detected: {id}")
 
     '''
