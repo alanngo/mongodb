@@ -1,3 +1,4 @@
+# 1 collection in a database
 class Collection:
 
     # helper functions
@@ -6,6 +7,7 @@ class Collection:
         tmp = self.find_by_id(_id + count)
         while len(tmp) > 0:
             count = count + 1
+            tmp = self.find_by_id(_id + count)
         return count
 
     # constructor
@@ -52,7 +54,11 @@ class Collection:
     '''
 
     def find_by_id(self, _id):
-        return self.find_by("_id", int(_id))[0]
+
+        tmp = self.find_by("_id", int(_id))
+        if len(tmp) == 0:
+            return {}
+        return tmp[0]
 
     # insertion functions
 
@@ -88,7 +94,7 @@ class Collection:
         if self.empty():
             self.add_by_id(1, entity)
         else:
-            index = self.size() + 1
+            index = self.size()
             offset = self.__probe(index)
             self.add_by_id(index + offset, entity)
 
