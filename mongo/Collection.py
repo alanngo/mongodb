@@ -2,9 +2,9 @@
 class Collection:
 
     # helper functions
-    def __probe(self, id):
+    def __probe(self, _id):
         count = 0
-        while len(self.find_by_id(id + count)) > 0:
+        while len(self.find_by_id(_id + count)) > 0:
             count = count + 1
         return count
 
@@ -24,8 +24,6 @@ class Collection:
         coll = self.__collection.find(criteria)
         for e in coll:
             ret.append(e)
-        if len(ret) == 1:
-            return ret[0]
         return ret
 
     """
@@ -49,8 +47,8 @@ class Collection:
     @param id: the id to enter
     @return the entry w/ associated id
     '''
-    def find_by_id(self, id):
-        return self.find_by("_id", int(id))
+    def find_by_id(self, _id):
+        return self.find_by("_id", int(_id))[0]
 
     # insertion functions
 
@@ -66,13 +64,13 @@ class Collection:
     @param id: the new id to add
     @param entity: the object entity to add
     '''
-    def add_by_id(self, id, entity: dict):
+    def add_by_id(self, _id, entity: dict):
         try:
             stub = {'_id': id}
             stub.update(entity)
             self.default_add(stub)
         except Exception:
-            raise RuntimeError(f"Duplicate keys detected: {id}")
+            raise RuntimeError(f"Duplicate keys detected: {_id}")
 
     '''
     adds an entry to the database by auto-incrementing
@@ -97,8 +95,8 @@ class Collection:
     removes an entry based on an id
     @param id: the object associated with id to remove
     '''
-    def remove_by_id(self, id):
-        self.__collection.delete_one({"_id": int(id)})
+    def remove_by_id(self, _id):
+        self.__collection.delete_one({"_id": int(_id)})
 
     '''
     clears all collections in the database
@@ -116,10 +114,10 @@ class Collection:
     @aggregate: default set
     https://docs.mongodb.com/manual/reference/operator/aggregation/set/
     '''
-    def update_entry(self, id, key: str, value: any, aggregate="set"):
+    def update_entry(self, _id, key: str, value: any, aggregate="set"):
         if key == "_id":
             raise RuntimeError("You are not allowed to update the object's id")
-        curr = self.find_by_id(id)
+        curr = self.find_by_id(_id)
         updated = {f"${aggregate}": {key: value}}
         self.__collection.update_one(curr, updated)
 
@@ -144,8 +142,8 @@ class Collection:
     @parm id: the id to search for
     @return true if can find by id
     """
-    def contains_id(self, id):
-        return len(self.find_by_id(id)) > 0
+    def contains_id(self, _id):
+        return len(self.find_by_id(_id)) > 0
 
     """
     checks if the collection contains an element
