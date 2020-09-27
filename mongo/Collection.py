@@ -66,7 +66,7 @@ class Collection:
     '''
     def add_by_id(self, _id, entity: dict):
         try:
-            stub = {'_id': id}
+            stub = {'_id': _id}
             stub.update(entity)
             self.default_add(stub)
         except Exception:
