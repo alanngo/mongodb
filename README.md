@@ -12,12 +12,12 @@
 
 ## MongoDB Shell
 
-###### Install 
+##### Install 
 ```bash
 $ sudo apt install mongodb
 ```
 
-###### Launch Mongo Shell
+##### Launch Mongo Shell
 Using the default host and port
 - {host} => custom host
 - {port} => custom port
@@ -37,7 +37,7 @@ Connect Remote:
 $ mongo "mongodb+srv://{server}/{dbname}" --username {username}
 ```
 
-###### Finding and Selecting Databases and Collections
+##### Finding and Selecting Databases and Collections
 Show all databases
 ```bash
 > show dbs
@@ -47,4 +47,13 @@ select a database
 - {database} => database you want to use
 ```bash
 > use {database}
+```
+
+##### Basic Operations
+- {collection} => the collection you want to use
+- {entry} => dictionary of criteria to use
+```bash
+> db.{collection}.find({}) # find all
+> db.{collection}.insertOne({entry}) # insert 1 element
+> db.{collection}.deleteOne({entry}) # delete 1 element
 ```
