@@ -1,10 +1,10 @@
-# 1 collection in a database
 class Collection:
 
     # helper functions
     def __probe(self, _id):
         count = 0
-        while len(self.find_by_id(_id + count)) > 0:
+        tmp = self.find_by_id(_id + count)
+        while len(tmp) > 0:
             count = count + 1
         return count
 
@@ -19,6 +19,7 @@ class Collection:
     @parm criteria: dictionary of criteria listing
     @return every element in the database that satisfies the criteria
     """
+
     def find_by_criteria(self, criteria: dict):
         ret = []
         coll = self.__collection.find(criteria)
@@ -30,6 +31,7 @@ class Collection:
     retrieves every entry in the database
     @return every element in the database
     """
+
     def find_all(self):
         return self.find_by_criteria({})
 
@@ -39,6 +41,7 @@ class Collection:
     @param value: criteria value
     @return the entries with the associated criteria
     '''
+
     def find_by(self, key, value: any):
         return self.find_by_criteria({key: value})
 
@@ -47,6 +50,7 @@ class Collection:
     @param id: the id to enter
     @return the entry w/ associated id
     '''
+
     def find_by_id(self, _id):
         return self.find_by("_id", int(_id))[0]
 
@@ -56,6 +60,7 @@ class Collection:
     adds an entry to the database with a auto-generated id
     @param entity: the object entity to add
     '''
+
     def default_add(self, entity: dict):
         self.__collection.insert_one(entity)
 
@@ -64,27 +69,34 @@ class Collection:
     @param id: the new id to add
     @param entity: the object entity to add
     '''
+
     def add_by_id(self, _id, entity: dict):
         try:
             stub = {'_id': _id}
             stub.update(entity)
             self.default_add(stub)
-        except Exception:
-            raise RuntimeError(f"Duplicate keys detected: {_id}")
+        except Exception as e:
+            # print(self.find_all())
+            raise RuntimeError(e)
 
     '''
     adds an entry to the database by auto-incrementing
     @param entity: the object entity to add
     '''
+
     def add(self, entity: dict):
-        index = self.size() + 1
-        offset = self.__probe(index)
-        self.add_by_id(index + offset, entity)
+        if self.empty():
+            self.add_by_id(1, entity)
+        else:
+            index = self.size() + 1
+            offset = self.__probe(index)
+            self.add_by_id(index + offset, entity)
 
     '''
     adds multiple entries to the db
     @param entity: the object entity to add
     '''
+
     def add_all(self, entries):
         for e in entries:
             self.add(e)
@@ -95,12 +107,14 @@ class Collection:
     removes an entry based on an id
     @param id: the object associated with id to remove
     '''
+
     def remove_by_id(self, _id):
         self.__collection.delete_one({"_id": int(_id)})
 
     '''
     clears all collections in the database
     '''
+
     def clear(self):
         self.__collection.delete_many({})
 
@@ -114,6 +128,7 @@ class Collection:
     @aggregate: default set
     https://docs.mongodb.com/manual/reference/operator/aggregation/set/
     '''
+
     def update_entry(self, _id, key: str, value: any, aggregate="set"):
         if key == "_id":
             raise RuntimeError("You are not allowed to update the object's id")
@@ -127,6 +142,7 @@ class Collection:
     size of collection
     @return number of elements in the collection
     '''
+
     def size(self):
         return self.__collection.count_documents({})
 
@@ -134,6 +150,7 @@ class Collection:
     sees if collection is empty
     @return: true if size is equal to 0
     '''
+
     def empty(self):
         return self.size() == 0
 
@@ -142,6 +159,7 @@ class Collection:
     @parm id: the id to search for
     @return true if can find by id
     """
+
     def contains_id(self, _id):
         return len(self.find_by_id(_id)) > 0
 
@@ -150,5 +168,6 @@ class Collection:
     @parm entry: what to search for
     @return true if can find by entry that contains criteria
     """
+
     def contains_entry(self, entry: dict):
         return len(self.find_by_criteria(entry)) > 0
