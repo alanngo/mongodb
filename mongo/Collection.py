@@ -4,10 +4,8 @@ class Collection:
     # helper functions
     def __probe(self, _id):
         count = 0
-        tmp = self.find_by_id(_id + count)
-        while len(tmp) > 0:
+        while self.contains_id(_id + count):
             count = count + 1
-            tmp = self.find_by_id(_id + count)
         return count
 
     # constructor
