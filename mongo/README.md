@@ -40,7 +40,7 @@ coll = mongo.collection[COLLECTION_NAME]
 - find_all(): list 
 - find_by(key: str value: any): list 
 - find_by_id(_id: int): dict 
-- add_by_id(id: any, entity: dict)
+- add_by_id(_id: any, entity: dict)
 - add(entity: dict)
 - add_all(entries: list)
 - remove_by_id(_id: int)
