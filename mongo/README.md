@@ -9,7 +9,7 @@
 ###### Initialization
 ```python
 # PICK ONE
-# a). set up mongodb connection by specifing url
+# a). set up mongodb connection by specifying url
 mongo = MongoDB(
     database=DATABASE, # the database name you want to use 
     docs=COLLECTIONS,  # collections you want to store in the db
