@@ -39,18 +39,20 @@ coll = mongo.collection[COLLECTION_NAME]
 - find_by_criteria(criteria: dict): list 
 - find_all(): list 
 - find_by(key: str value: any): list 
-- find_by_id(id: int): dict 
+- find_by_id(_id: int): dict 
 - add(entity: dict)
 - add_all(entries: list)
-- remove_by_id(id: int)
+- remove_by_id(_id: int)
 - clear()
-- update_entry(id: int, key: str, value: any, aggregate="set")
+- update_entry(_id: int, key: str, value: any, aggregate="set")
 - size(): int
 - empty(): bool
-- contains_id(id: int): bool
+- contains_id(_id: int): bool
 - contains_entry(entry: dict): bool
 
 # use cautiously
+- default_find_by_id(_id: any): dict
 - default_add(entity: dict) 
 - add_by_id(id: any, entity: dict)
+- default_remove_by_id(_id: any)
 ```
