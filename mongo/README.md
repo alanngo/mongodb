@@ -51,8 +51,9 @@ coll = mongo.collection[COLLECTION_NAME]
 - contains_id(_id: int): bool
 - contains_entry(entry: dict): bool
 
-# use cautiously
+# use if id is NOT of type int
 - default_find_by_id(_id: any): dict
 - default_add(entity: dict) 
 - default_remove_by_id(_id: any)
+- default_contains_id(_id: any): bool
 ```

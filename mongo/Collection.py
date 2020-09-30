@@ -12,8 +12,44 @@ class Collection:
     def __init__(self, db, document):
         self.__collection = db[document]
 
-    # retrieval functions
+    ##########################################################
+    # DEFAULT FUNCTIONS: use ONLY if id is NOT int type
+    '''
+    find an entry based on an object id
+    @param id: the id to enter
+    @return the entry w/ associated id
+    '''
+    def default_find_by_id(self, _id: any):
+        tmp = self.find_by("_id", _id)
+        if len(tmp) == 0:
+            return {}
+        return tmp[0]
 
+    '''
+    adds an entry to the database with a auto-generated id
+    @param entity: the object entity to add
+    '''
+    def default_add(self, entity: dict):
+        self.__collection.insert_one(entity)
+
+    '''
+    removes an entry based on id of any type
+    @param id: the object associated with id to remove
+    '''
+    def default_remove_by_id(self, _id: any):
+        self.__collection.delete_one({"_id": _id})
+
+    """
+    checks if the collection contains an element based on id
+    @parm id: the id to search for
+    @return true if can find by id
+    """
+    def default_contains_id(self, _id: any):
+        return len(self.default_find_by_id(_id)) > 0
+
+    ##########################################################
+
+    # retrieval functions
     """
     retrieves every entry in the database based on a criteria dictionary
     @parm criteria: dictionary of criteria listing
@@ -43,17 +79,6 @@ class Collection:
         return self.find_by_criteria({key: value})
 
     '''
-    find an entry based on an object id
-    @param id: the id to enter
-    @return the entry w/ associated id
-    '''
-    def default_find_by_id(self, _id: any):
-        tmp = self.find_by("_id", _id)
-        if len(tmp) == 0:
-            return {}
-        return tmp[0]
-
-    '''
     find an entry based on the integer id
     @param id: the id to enter
     @return the entry w/ associated id
@@ -62,13 +87,6 @@ class Collection:
         return self.default_find_by_id(int(_id))
 
     # insertion functions
-
-    '''
-    adds an entry to the database with a auto-generated id
-    @param entity: the object entity to add
-    '''
-    def default_add(self, entity: dict):
-        self.__collection.insert_one(entity)
 
     '''
     adds an entry to the database with a user-defined id
@@ -81,7 +99,7 @@ class Collection:
             stub.update(entity)
             self.default_add(stub)
         except Exception as e:
-            raise RuntimeError(e)
+            raise RuntimeError(f"Caused by: {e}")
 
     '''
     adds an entry to the database by auto-incrementing
@@ -104,14 +122,6 @@ class Collection:
             self.add(e)
 
     # removal functions
-
-    '''
-    removes an entry based on id of any type
-    @param id: the object associated with id to remove
-    '''
-    def default_remove_by_id(self, _id: any):
-        self.__collection.delete_one({"_id": _id})
-
     '''
     removes an entry based on an id of int type
     @param id: the object associated with id to remove
@@ -135,10 +145,10 @@ class Collection:
     @aggregate: default set
     https://docs.mongodb.com/manual/reference/operator/aggregation/set/
     '''
-    def update_entry(self, _id, key: str, value: any, aggregate="set"):
+    def update_entry(self, _id: any, key: str, value: any, aggregate="set"):
         if key == "_id":
             raise RuntimeError("You are not allowed to update the object's id")
-        curr = self.find_by_id(_id)
+        curr = self.default_find_by_id(_id)
         updated = {f"${aggregate}": {key: value}}
         self.__collection.update_one(curr, updated)
 
@@ -159,11 +169,11 @@ class Collection:
         return self.size() == 0
 
     """
-    checks if the collection contains an element based on id
+    checks if the collection contains an element based on an int id
     @parm id: the id to search for
     @return true if can find by id
     """
-    def contains_id(self, _id):
+    def contains_id(self, _id: int):
         return len(self.find_by_id(_id)) > 0
 
     """
