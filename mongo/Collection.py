@@ -75,13 +75,12 @@ class Collection:
     @param id: the new id to add
     @param entity: the object entity to add
     '''
-    def add_by_id(self, _id, entity: dict):
+    def add_by_id(self, _id: any, entity: dict):
         try:
             stub = {'_id': _id}
             stub.update(entity)
             self.default_add(stub)
         except Exception as e:
-            # print(self.find_all())
             raise RuntimeError(e)
 
     '''
