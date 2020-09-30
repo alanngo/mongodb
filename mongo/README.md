@@ -45,7 +45,7 @@ coll = mongo.collection[COLLECTION_NAME]
 - add_all(entries: list)
 - remove_by_id(_id: int)
 - clear()
-- update_entry(_id: int, key: str, value: any, aggregate="set")
+- update_entry(_id: any, key: str, value: any, aggregate="set")
 - size(): int
 - empty(): bool
 - contains_id(_id: int): bool
