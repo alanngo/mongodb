@@ -122,6 +122,7 @@ class Collection:
             self.add(e)
 
     # removal functions
+
     '''
     removes an entry based on an id of int type
     @param id: the object associated with id to remove
@@ -130,10 +131,17 @@ class Collection:
         self.default_remove_by_id(int(_id))
 
     '''
+    removes multiple entries if they satisfy a criteria
+    @param criteria: specific criteria we want to remove by
+    '''
+    def remove_by_criteria(self, criteria: dict):
+        self.__collection.delete_many(criteria)
+
+    '''
     clears all collections in the database
     '''
     def clear(self):
-        self.__collection.delete_many({})
+        self.remove_by_criteria({})
 
     # update functions
 
