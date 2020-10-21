@@ -1,6 +1,10 @@
 from pymongo import *
 
-from mongo.Collection import Collection
+from AutoIncrementCollection import *
+from Collection import *
+
+DEFAULT = 0
+AUTO_INCREMENT = 1
 
 
 class MongoDB:
@@ -9,10 +13,11 @@ class MongoDB:
     def __init__(
             self,
             database: str,
-            docs: list,
+            docs: dict,
             url: str = None,
             host: str = None,
-            port: int = None
+            port: int = None,
+
     ):
 
         if host or port is not None:
@@ -21,5 +26,8 @@ class MongoDB:
             cluster = MongoClient(url)
         db = cluster[database]
         self.collection = {}
-        for doc in docs:
-            self.collection[doc] = Collection(db, doc)
+        for k in docs:  # k -> collection name
+            if docs[k] == DEFAULT:
+                self.collection[k] = Collection(db, k)
+            if docs[k] == AUTO_INCREMENT:
+                self.collection[k] = AutoIncrementCollection(db, k)
