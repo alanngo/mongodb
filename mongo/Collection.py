@@ -1,3 +1,6 @@
+from bson import ObjectId
+
+
 class Collection:
 
     # constructor
@@ -30,8 +33,16 @@ class Collection:
     @param value: criteria value
     @return the entries with the associated criteria
     '''
-    def find_by(self, key, value: any):
+    def find_by(self, key: str, value: any):
         return self.find_by_criteria({key: value})
+
+    '''
+    find entries if _id is of type ObjectId
+    @param _id: string version of object id
+    @return the entry with the given id
+    '''
+    def find_by_object_id(self, _id: str):
+        return self.find_by_id(ObjectId(_id))
 
     '''
     find an entry based on an object id

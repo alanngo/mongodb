@@ -16,6 +16,12 @@ class AutoIncrementCollection(Collection):
         super().__init__(db, document)
 
     '''
+    Method Not allowed
+    '''
+    def find_by_object_id(self, _id: str):
+        raise RuntimeError("Method not allowed for auto-inc databases!")
+
+    '''
     find an entry based on the integer id
     @param id: the id to enter
     @return the entry w/ associated id
