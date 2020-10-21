@@ -10,9 +10,9 @@
 Using URL
 ```python
 from MongoDB import *
-DATABASE = "UnitTestDB"
+DATABASE: str ="UnitTestDB"
 COLLECTIONS = {"TestCollection1": AUTO_INCREMENT, "TestCollection2": DEFAULT}
-URL = "ENTER MONGODB URL HERE"
+URL: str = "ENTER MONGODB URL HERE"
 mongo = MongoDB(
     database=DATABASE, # the database name you want to use 
     docs=COLLECTIONS,  # collections you want to store in the db
@@ -24,9 +24,9 @@ tc2 = mongo.collection["TestCollection2"]
 Using Host and Port
 ```python
 from MongoDB import *
-DATABASE = "UnitTestDB"
+DATABASE: str = "UnitTestDB"
 COLLECTIONS = {"TestCollection1": AUTO_INCREMENT, "TestCollection2": DEFAULT}
-HOST = "localhost"
+HOST: str = "localhost"
 PORT = 27017
 
 # b). set up mongodb connection by defining host and port

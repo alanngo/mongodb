@@ -5,7 +5,7 @@ from Collection import *
 class AutoIncrementCollection(Collection):
 
     # helper functions
-    def __probe(self, _id: int):
+    def __probe(self, _id: int) -> int:
         count = 0
         while self.contains_id(_id + count):
             count = count + 1
@@ -15,27 +15,29 @@ class AutoIncrementCollection(Collection):
     def __init__(self, db, document):
         super().__init__(db, document)
 
-    '''
-    Method Not allowed
-    '''
     def find_by_object_id(self, _id: str):
-        raise RuntimeError("Method not allowed for auto-inc databases!")
+        """
+        Method Not allowed
+        :raises RuntimeError: AutoInc documents cannot have type ObjectId for _id
+        """
+        raise RuntimeError("Method not allowed for auto-inc document!")
 
-    '''
-    find an entry based on the integer id
-    @param id: the id to enter
-    @return the entry w/ associated id
-    '''
-    def find_by_id(self, _id: int):
+    def find_by_id(self, _id: int) -> dict:
+        """
+        find an entry based on the integer id
+        :param _id: the id to enter
+        :rtype dict
+        :return the entry w/ associated id
+        """
         return super().find_by_id(int(_id))
 
     # insertion functions
 
-    '''
-    adds an entry to the database by auto-incrementing
-    @param entity: the object entity to add
-    '''
     def add(self, entity: dict):
+        """
+        adds an entry to the database by auto-incrementing
+        :param entity: the object entity to add
+        """
         if self.empty():
             self.add_by_id(1, entity)
         else:
@@ -43,38 +45,40 @@ class AutoIncrementCollection(Collection):
             offset = self.__probe(index)
             self.add_by_id(index + offset, entity)
 
-    '''
-    adds multiple entries to the db
-    @param entity: the object entity to add
-    '''
-    def add_all(self, entries):
+    def add_all(self, entries: list):
+        """
+        adds multiple entries to the db
+        :param entries: the object entity to add
+        """
         for e in entries:
             self.add(e)
 
     # removal functions
 
-    '''
-    removes an entry based on an id of int type
-    @param id: the object associated with id to remove
-    '''
     def remove_by_id(self, _id: int):
+        """
+        removes an entry based on an id of int type
+        :param _id: the object associated with id to remove
+        """
         super().remove_by_id(int(_id))
 
-    '''
-    updates an entries attributes
-    @param _id: the id as an int of the entry we want to update
-    @key: attribute name we want to update
-    @value: attribute value mapped from key
-    @aggregate: default set
-    https://docs.mongodb.com/manual/reference/operator/aggregation/set/
-    '''
     def update_entry(self, _id: int, key: str, value: any, aggregate="set"):
+        """
+        updates an entries attributes
+        :param _id: the id as an int of the entry we want to update
+        :param key: attribute name we want to update
+        :param value: attribute value mapped from key
+        :param aggregate: default set
+
+        https://docs.mongodb.com/manual/reference/operator/aggregation/set/
+        """
         super().update_entry(int(_id), key, value, aggregate)
 
-    """
-    checks if the collection contains an element based on an int id
-    @parm id: the id to search for
-    @return true if can find by id
-    """
-    def contains_id(self, _id: int):
+    def contains_id(self, _id: int) -> bool:
+        """
+        checks if the collection contains an element based on an int id
+        :param _id: the id to search for
+        :rtype bool
+        :return True if can find by id
+        """
         return len(self.find_by_id(_id)) > 0

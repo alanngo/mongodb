@@ -19,11 +19,28 @@ class MongoDB:
             port: int = None,
 
     ):
-
-        if host or port is not None:
-            cluster = MongoClient(host, port)
+        """
+        :param database: database name to use
+        :param docs: collections in the database
+        :param url: mongodb url
+        :param host: connection host
+        :param port: connection port
+        :raises RuntimeError: raised in the following cases
+                - host, port, url are all specified
+                - host specified w/o port
+                - port specified w/o host
+        """
+        if host is None and port is None and url is None:
+            cluster = MongoClient("localhost", 27017)  # default connection
+        elif (host is not None and port is not None) and (url is None):
+            cluster = MongoClient(host, port)  # user-specified connection
+        elif (host is None and port is None) and (url is not None):
+            cluster = MongoClient(url)  # cluster connection
         else:
-            cluster = MongoClient(url)
+            raise RuntimeError("USAGE:\n"
+                               "mongo = MongoDB(host=HOST, port=PORT, database=DATABASE, docs=COLLECTION)\n"
+                               "or\n"
+                               "mongo = MongoDB(url=URL, database=DATABASE, docs=COLLECTION)")
         db = cluster[database]
         self.collection = {}
         for k in docs:  # k -> collection name
