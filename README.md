@@ -58,7 +58,7 @@ select a database
 > db.{collection}.find({"CS industry":"data science"}) # find all documents with the given criteria
 
 > db.{collection}.insertOne({"game":"fortnite"}) # insert 1 element
-> db.{collection}.insertOne([{"game":"fortnite"}, {"game":"angry birds"}]) # insert multiple elements (NEEDS TO BE AN ARRAY)
+> db.{collection}.insertMany([{"game":"fortnite"}, {"game":"angry birds"}]) # insert multiple elements (NEEDS TO BE AN ARRAY)
 
 > db.{collection}.deleteOne({"language":"sql"}) # delete the first element with a matching criteria
 > db.{collection}.deleteMany({"subject":"research"}) # delete all elements with a matching criteria
