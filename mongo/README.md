@@ -1,4 +1,10 @@
 # MongoDB Helper Class
+###### Prereqs
+```bash
+$ pip3 install pymongo
+$ pip3 install dnspython
+```
+###### General
 - Used to do heavy lifting for mongo operations
 - Utilizes 'pymongo' library
 - Make sure you copy this directory in the described structure below to your python workspace

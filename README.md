@@ -51,9 +51,21 @@ select a database
 
 ##### Basic Operations
 - {collection} => the collection you want to use
-- {entry} => dictionary of criteria to use
+- to specify a criteria, use JSON notation
+- {} => refers to all documents
 ```bash
-> db.{collection}.find({}) # find all
-> db.{collection}.insertOne({entry}) # insert 1 element
-> db.{collection}.deleteOne({entry}) # delete 1 element
+> db.{collection}.find({}) # find all documents
+> db.{collection}.find({"CS industry":"data science"}) # find all documents with the given criteria
+
+> db.{collection}.insertOne({"game":"fortnite"}) # insert 1 element
+> db.{collection}.insertOne([{"game":"fortnite"}, {"game":"angry birds"}]) # insert multiple elements (NEEDS TO BE AN ARRAY)
+
+> db.{collection}.deleteOne({"language":"sql"}) # delete the first element with a matching criteria
+> db.{collection}.deleteMany({"subject":"research"}) # delete all elements with a matching criteria
+> db.{collection}.deleteMany({}) # clears all the documents in the db
+
+# 1st argument: criteria
+# 2nd argument: update to
+# updateOne(<CRITERIA>, {$set:<NEW ENTRY>})
+> db.{collection}.updateOne({"name":"omruti"}, {$set:{"loves":"fortnite"}}) # update one 
 ```
