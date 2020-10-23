@@ -1,5 +1,7 @@
 from Collection import *
 
+_OBJ_ID_ERR = "Method not allowed for auto-inc document!"
+
 
 # uses auto-increment to generate the id
 class AutoIncrementCollection(Collection):
@@ -14,13 +16,6 @@ class AutoIncrementCollection(Collection):
     # constructor
     def __init__(self, db, document):
         super().__init__(db, document)
-
-    def find_by_object_id(self, _id: str):
-        """
-        Method Not allowed
-        :raises RuntimeError: AutoInc documents cannot have type ObjectId for _id
-        """
-        raise RuntimeError("Method not allowed for auto-inc document!")
 
     def find_by_id(self, _id: int) -> dict:
         """
@@ -62,7 +57,7 @@ class AutoIncrementCollection(Collection):
         """
         super().remove_by_id(int(_id))
 
-    def update_entry(self, _id: int, key: str, value: any, aggregate="set"):
+    def update_by_id(self, _id: int, key: str, value: any, aggregate="set"):
         """
         updates an entries attributes
         :param _id: the id as an int of the entry we want to update
@@ -72,7 +67,7 @@ class AutoIncrementCollection(Collection):
 
         https://docs.mongodb.com/manual/reference/operator/aggregation/set/
         """
-        super().update_entry(int(_id), key, value, aggregate)
+        super().update_by_id(int(_id), key, value, aggregate)
 
     def contains_id(self, _id: int) -> bool:
         """
@@ -82,3 +77,16 @@ class AutoIncrementCollection(Collection):
         :return True if can find by id
         """
         return len(self.find_by_id(_id)) > 0
+
+    # methods not allowed because Auto Inc does not support ObjectId
+    def find_by_object_id(self, _id: str):
+        raise RuntimeError(_OBJ_ID_ERR)
+
+    def remove_by_object_id(self, _id: str):
+        raise RuntimeError(_OBJ_ID_ERR)
+
+    def update_by_object_id(self, _id: str, key: str, value: any, aggregate="set"):
+        raise RuntimeError(_OBJ_ID_ERR)
+
+    def contains_object_id(self, _id: str) -> bool:
+        raise RuntimeError(_OBJ_ID_ERR)

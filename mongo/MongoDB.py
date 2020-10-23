@@ -26,9 +26,8 @@ class MongoDB:
         :param host: connection host
         :param port: connection port
         :raises RuntimeError: raised in the following cases
-                - host, port, url are all specified
-                - host specified w/o port
-                - port specified w/o host
+                - host/port specified w/o port/host
+                - url specified w/ host and/or port
         """
         if host is None and port is None and url is None:
             cluster = MongoClient("localhost", 27017)  # default connection

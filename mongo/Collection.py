@@ -8,7 +8,7 @@ class Collection:
         self._collection = db[document]
 
     # retrieval functions
-
+    # criteria, all, where, id, object_id
     def find_by_criteria(self, criteria: dict) -> list:
         """
         retrieves every entry in the database based on a criteria dictionary
@@ -30,7 +30,7 @@ class Collection:
         """
         return self.find_by_criteria({})
 
-    def find_by(self, key: str, value: any) -> list:
+    def find_where(self, key: str, value: any) -> list:
         """
         find entries based on key-value entry
         :param key: criteria key
@@ -39,15 +39,6 @@ class Collection:
         :return the entries with the associated criteria
         """
         return self.find_by_criteria({key: value})
-
-    def find_by_object_id(self, _id: str) -> dict:
-        """
-        find entries if _id is of type ObjectId
-        :param _id: string version of object id
-        :rtype dict
-        :return the entry with the given id
-        """
-        return self.find_by_id(ObjectId(_id))
 
     def find_by_id(self, _id: any) -> dict:
         """
@@ -61,8 +52,17 @@ class Collection:
             return {}
         return tmp[0]
 
-    # insertion functions
+    def find_by_object_id(self, _id: str) -> dict:
+        """
+        find entry w/ _id  of type ObjectId
+        :param _id: string version of object id
+        :rtype dict
+        :return the entry with the given id
+        """
+        return self.find_by_id(ObjectId(_id))
 
+    # insertion functions
+    # normal, all, id,
     def add(self, entity: dict):
         """
         adds an entry to the database with type ObjectId
@@ -93,13 +93,20 @@ class Collection:
             raise RuntimeError(f"Caused by: {e}")
 
     # removal functions
-
+    # id, object_id, criteria, all
     def remove_by_id(self, _id: any):
         """
         removes an entry based on id of any type
         :param _id: the object associated with id to remove
         """
         self._collection.delete_one({"_id": _id})
+
+    def remove_by_object_id(self, _id: str):
+        """
+        removes an entry based on id of type ObjectId
+        :param _id: ObjectId type _id
+        """
+        self.remove_by_id(ObjectId(_id))
 
     def remove_by_criteria(self, criteria: dict):
         """
@@ -110,29 +117,72 @@ class Collection:
 
     def clear(self):
         """
-        clears all collections in the database
+        clears all documents in the database
         """
         self.remove_by_criteria({})
 
     # update functions
-
-    def update_entry(self, _id: any, key: str, value: any, aggregate="set"):
+    # id, single, multiple, all
+    def update_entry(self, criteria: dict, key: str, value: any, aggregate="set"):
         """
-        updates an entries attributes
+        updates the first entry with the matching criteria
+        :param criteria: the criteria we want to find the documents by
+        :param key: attribute name we want to update
+        :param value: attribute value mapped from key
+        :param aggregate: default set
+        """
+        if key == "_id":
+            raise RuntimeError("You are not allowed to update the object's id")
+        curr = self.find_by_criteria(criteria)[0]
+        updated = {f"${aggregate}": {key: value}}
+        self._collection.update_one(curr, updated)
+
+    def update_by_id(self, _id: any, key: str, value: any, aggregate="set"):
+        """
+        updates an entries attributes by finding the entry w/ matching id
         :param _id: the id of the entry we want to update
         :param key: attribute name we want to update
         :param value: attribute value mapped from key
         :param aggregate: default set
         https://docs.mongodb.com/manual/reference/operator/aggregation/set/
         """
+        self.update_entry({"_id": _id}, key, value, aggregate)
+
+    def update_by_object_id(self, _id: str, key: str, value: any, aggregate="set"):
+        """
+        updates an entries attributes by finding the entry w/ matching id
+        :param _id: the id of the entry we want to update
+        :param key: attribute name we want to update
+        :param value: attribute value mapped from key
+        :param aggregate: default set
+        https://docs.mongodb.com/manual/reference/operator/aggregation/set/
+        """
+        self.update_by_id(ObjectId(_id), key, value, aggregate)
+
+    def update_entries(self, criteria: dict, key: str, value: any, aggregate="set"):
+        """
+        updates the all entries with the matching criteria
+        :param criteria: the criteria we want to find the documents by
+        :param key: attribute name we want to update
+        :param value: attribute value mapped from key
+        :param aggregate: default set
+        """
         if key == "_id":
             raise RuntimeError("You are not allowed to update the object's id")
-        curr = self.find_by_id(_id)
         updated = {f"${aggregate}": {key: value}}
-        self._collection.update_one(curr, updated)
+        self._collection.update_many(criteria, updated)
+
+    def update_all(self, key: str, value: any, aggregate="set"):
+        """
+        updates the all entries in the collection
+        :param key: attribute name we want to update
+        :param value: attribute value mapped from key
+        :param aggregate: default set
+        """
+        self.update_entries({}, key, value, aggregate)
 
     # properties functions
-
+    # size, empty, contains id, contains entry
     def size(self) -> int:
         """
         size of collection
@@ -157,6 +207,15 @@ class Collection:
         :return true if can find by id
         """
         return len(self.find_by_id(_id)) > 0
+
+    def contains_object_id(self, _id: str) -> bool:
+        """
+        checks if the collection contains an element based on id of type ObjectId
+        :param _id: the id to search for
+        :rtype bool
+        :return true if can find by id
+        """
+        return len(self.find_by_object_id(_id)) > 0
 
     def contains_entry(self, entry: dict) -> bool:
         """
