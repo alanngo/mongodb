@@ -1,7 +1,7 @@
 from pymongo import *
 
-from AutoIncrementCollection import *
-from Collection import *
+from .AutoIncrementCollection import *
+from .Collection import *
 
 DEFAULT = 0
 AUTO_INCREMENT = 1

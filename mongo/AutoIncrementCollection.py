@@ -1,4 +1,4 @@
-from Collection import *
+from .Collection import *
 
 _OBJ_ID_ERR = "Method not allowed for auto-inc document!"
 

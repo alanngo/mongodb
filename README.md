@@ -1,5 +1,11 @@
 <img src="mongo.png" height = 100>
 
+## Structure
+- NoSQL
+- Non-relational
+- Uses embedded documents instead of joins
+- Automatically creates db/collection if it doesn't exist already
+
 ## How to Install
 
 1. Follow the <a href="https://www.mongodb.com/try/download/enterprise">MongoDB  link</a>
