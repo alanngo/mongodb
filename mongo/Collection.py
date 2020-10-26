@@ -68,7 +68,7 @@ class Collection:
         :param entries: the object entity to add
         """
         for e in entries:
-            self._collection.add(e)
+            self.add(e)
 
     def add_by_id(self, _id: any, entity: dict):
         """
