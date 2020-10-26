@@ -1,7 +1,5 @@
 from .Collection import *
 
-_OBJ_ID_ERR = "Method not allowed for auto-inc document!"
-
 
 # uses auto-increment to generate the id
 class AutoIncrementCollection(Collection):
@@ -57,12 +55,12 @@ class AutoIncrementCollection(Collection):
         """
         super().remove_by_id(int(_id))
 
-    def update_by_id(self, _id: int, key: str, value: any, aggregate="set"):
+    def update_by_id(self, _id: int, key: str, value: any, aggregate=SET):
         """
         updates an entries attributes
         :param _id: the id as an int of the entry we want to update
         :param key: attribute name we want to update
-        :param value: attribute value mapped from key
+        :param value: value to update to/by
         :param aggregate: default set
 
         https://docs.mongodb.com/manual/reference/operator/aggregation/set/

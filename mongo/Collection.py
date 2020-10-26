@@ -1,3 +1,9 @@
+SET = "set"  # sets an document's field to a new value
+UNSET = "unset"  # unset a document's field
+PUSH = "push"  # pushes an element into a document's array field
+POP = "pop"  # removes either the first or last element in an array
+INC = "inc"  # increments a document's numerical field
+
 
 class Collection:
 
@@ -109,12 +115,12 @@ class Collection:
 
     # update functions
     # id, single, multiple, all
-    def update_entry(self, criteria: dict, key: str, value: any, aggregate="set"):
+    def update_entry(self, criteria: dict, key: str, value: any, aggregate=SET):
         """
         updates the first entry with the matching criteria
         :param criteria: the criteria we want to find the documents by
         :param key: attribute name we want to update
-        :param value: attribute value mapped from key
+        :param value: value to update to/by
         :param aggregate: default set
         """
         if key == "_id":
@@ -123,23 +129,23 @@ class Collection:
         updated = {f"${aggregate}": {key: value}}
         self._collection.update_one(curr, updated)
 
-    def update_by_id(self, _id: any, key: str, value: any, aggregate="set"):
+    def update_by_id(self, _id: any, key: str, value: any, aggregate=SET):
         """
         updates an entries attributes by finding the entry w/ matching id
         :param _id: the id of the entry we want to update
         :param key: attribute name we want to update
-        :param value: attribute value mapped from key
+        :param value: value to update to/by
         :param aggregate: default set
         https://docs.mongodb.com/manual/reference/operator/aggregation/set/
         """
         self.update_entry({"_id": _id}, key, value, aggregate)
 
-    def update_entries(self, criteria: dict, key: str, value: any, aggregate="set"):
+    def update_entries(self, criteria: dict, key: str, value: any, aggregate=SET):
         """
         updates the all entries with the matching criteria
         :param criteria: the criteria we want to find the documents by
         :param key: attribute name we want to update
-        :param value: attribute value mapped from key
+        :param value: value to update to/by
         :param aggregate: default set
         """
         if key == "_id":
@@ -147,11 +153,11 @@ class Collection:
         updated = {f"${aggregate}": {key: value}}
         self._collection.update_many(criteria, updated)
 
-    def update_all(self, key: str, value: any, aggregate="set"):
+    def update_all(self, key: str, value: any, aggregate=SET):
         """
         updates the all entries in the collection
         :param key: attribute name we want to update
-        :param value: attribute value mapped from key
+        :param value: value to update to/by
         :param aggregate: default set
         """
         self.update_entries({}, key, value, aggregate)

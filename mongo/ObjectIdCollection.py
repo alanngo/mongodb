@@ -37,12 +37,12 @@ class ObjectIdCollection(Collection):
         """
         super().remove_by_id(ObjectId(_id))
 
-    def update_by_id(self, _id: str, key: str, value: any, aggregate="set"):
+    def update_by_id(self, _id: str, key: str, value: any, aggregate=SET):
         """
         updates an entries attributes by finding the entry w/ matching id
         :param _id: the id of the entry we want to update
         :param key: attribute name we want to update
-        :param value: attribute value mapped from key
+        :param value: value to update to/by
         :param aggregate: default set
         https://docs.mongodb.com/manual/reference/operator/aggregation/set/
         """
