@@ -77,16 +77,3 @@ class AutoIncrementCollection(Collection):
         :return True if can find by id
         """
         return len(self.find_by_id(_id)) > 0
-
-    # methods not allowed because Auto Inc does not support ObjectId
-    def find_by_object_id(self, _id: str):
-        raise RuntimeError(_OBJ_ID_ERR)
-
-    def remove_by_object_id(self, _id: str):
-        raise RuntimeError(_OBJ_ID_ERR)
-
-    def update_by_object_id(self, _id: str, key: str, value: any, aggregate="set"):
-        raise RuntimeError(_OBJ_ID_ERR)
-
-    def contains_object_id(self, _id: str) -> bool:
-        raise RuntimeError(_OBJ_ID_ERR)

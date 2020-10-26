@@ -1,5 +1,3 @@
-from bson import ObjectId
-
 
 class Collection:
 
@@ -52,22 +50,16 @@ class Collection:
             return {}
         return tmp[0]
 
-    def find_by_object_id(self, _id: str) -> dict:
-        """
-        find entry w/ _id  of type ObjectId
-        :param _id: string version of object id
-        :rtype dict
-        :return the entry with the given id
-        """
-        return self.find_by_id(ObjectId(_id))
-
     # insertion functions
     # normal, all, id,
     def add(self, entity: dict):
         """
         adds an entry to the database with type ObjectId
         :param entity: the object entity to add
+        :raises RuntimeError: if no id KV pair is specified
         """
+        if "_id" not in entity.keys():
+            raise RuntimeError("No id specified")
         self._collection.insert_one(entity)
 
     def add_all(self, entries: list):
@@ -75,7 +67,8 @@ class Collection:
         adds multiple entries to the db
         :param entries: the object entity to add
         """
-        self._collection.insert_many(entries)
+        for e in entries:
+            self._collection.add(e)
 
     def add_by_id(self, _id: any, entity: dict):
         """
@@ -100,13 +93,6 @@ class Collection:
         :param _id: the object associated with id to remove
         """
         self._collection.delete_one({"_id": _id})
-
-    def remove_by_object_id(self, _id: str):
-        """
-        removes an entry based on id of type ObjectId
-        :param _id: ObjectId type _id
-        """
-        self.remove_by_id(ObjectId(_id))
 
     def remove_by_criteria(self, criteria: dict):
         """
@@ -147,17 +133,6 @@ class Collection:
         https://docs.mongodb.com/manual/reference/operator/aggregation/set/
         """
         self.update_entry({"_id": _id}, key, value, aggregate)
-
-    def update_by_object_id(self, _id: str, key: str, value: any, aggregate="set"):
-        """
-        updates an entries attributes by finding the entry w/ matching id
-        :param _id: the id of the entry we want to update
-        :param key: attribute name we want to update
-        :param value: attribute value mapped from key
-        :param aggregate: default set
-        https://docs.mongodb.com/manual/reference/operator/aggregation/set/
-        """
-        self.update_by_id(ObjectId(_id), key, value, aggregate)
 
     def update_entries(self, criteria: dict, key: str, value: any, aggregate="set"):
         """
@@ -207,15 +182,6 @@ class Collection:
         :return true if can find by id
         """
         return len(self.find_by_id(_id)) > 0
-
-    def contains_object_id(self, _id: str) -> bool:
-        """
-        checks if the collection contains an element based on id of type ObjectId
-        :param _id: the id to search for
-        :rtype bool
-        :return true if can find by id
-        """
-        return len(self.find_by_object_id(_id)) > 0
 
     def contains_entry(self, entry: dict) -> bool:
         """

@@ -1,10 +1,12 @@
 from pymongo import *
 
 from .AutoIncrementCollection import *
+from .ObjectIdCollection import *
 from .Collection import *
 
 DEFAULT = 0
 AUTO_INCREMENT = 1
+OBJECT_ID = 2
 
 
 class MongoDB:
@@ -47,3 +49,5 @@ class MongoDB:
                 self.collection[k] = Collection(db, k)
             if docs[k] == AUTO_INCREMENT:
                 self.collection[k] = AutoIncrementCollection(db, k)
+            if docs[k] == OBJECT_ID:
+                self.collection[k] = ObjectIdCollection(db, k)
