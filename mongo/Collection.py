@@ -20,11 +20,7 @@ class Collection:
         :rtype list
         :return every element in the database that satisfies the criteria
         """
-        ret = []
-        coll = self._collection.find(criteria)
-        for e in coll:
-            ret.append(e)
-        return ret
+        return list(self._collection.find(criteria))
 
     def find_all(self) -> list:
         """
