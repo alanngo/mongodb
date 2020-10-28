@@ -1,4 +1,4 @@
-# MongoDB Helper Class
+# MongoDB Wrapper Class
 ###### Prereqs
 ```bash
 $ pip3 install pymongo
@@ -7,6 +7,12 @@ $ pip3 install dnspython
 ###### General
 - Used to do heavy lifting for mongo operations
 - Utilizes 'pymongo' library
+    - pymongo does not automatically return lists for find functions: need to unwrap
+    - makes finding/updating/deleting by id easy
+    - 3 types of ID schemes
+        - user defined -> Collection
+        - Auto increment -> AutoIncrementCollection
+        - ObjectId -> ObjectIdCollection
 - Make sure you copy this directory in the described structure below to your python workspace
     - mongo/Collection.py
     - mongo/MongoDB.py
