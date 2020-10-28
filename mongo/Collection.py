@@ -88,7 +88,7 @@ class Collection:
             raise RuntimeError(f"Caused by: {e}")
 
     # removal functions
-    # id, object_id, criteria, all
+    # id, criteria, all
     def remove_by_id(self, _id: any):
         """
         removes an entry based on id of any type
@@ -110,35 +110,10 @@ class Collection:
         self.remove_by_criteria({})
 
     # update functions
-    # id, single, multiple, all
-    def update_entry(self, criteria: dict, key: str, value: any, aggregate=SET):
+    # id, criteria, all
+    def update_by_criteria(self, criteria: dict, key: str, value: any, aggregate=SET):
         """
         updates the first entry with the matching criteria
-        :param criteria: the criteria we want to find the documents by
-        :param key: attribute name we want to update
-        :param value: value to update to/by
-        :param aggregate: default set
-        """
-        if key == "_id":
-            raise RuntimeError("You are not allowed to update the object's id")
-        curr = self.find_by_criteria(criteria)[0]
-        updated = {f"${aggregate}": {key: value}}
-        self._collection.update_one(curr, updated)
-
-    def update_by_id(self, _id: any, key: str, value: any, aggregate=SET):
-        """
-        updates an entries attributes by finding the entry w/ matching id
-        :param _id: the id of the entry we want to update
-        :param key: attribute name we want to update
-        :param value: value to update to/by
-        :param aggregate: default set
-        https://docs.mongodb.com/manual/reference/operator/aggregation/set/
-        """
-        self.update_entry({"_id": _id}, key, value, aggregate)
-
-    def update_entries(self, criteria: dict, key: str, value: any, aggregate=SET):
-        """
-        updates the all entries with the matching criteria
         :param criteria: the criteria we want to find the documents by
         :param key: attribute name we want to update
         :param value: value to update to/by
@@ -149,6 +124,17 @@ class Collection:
         updated = {f"${aggregate}": {key: value}}
         self._collection.update_many(criteria, updated)
 
+    def update_by_id(self, _id: any, key: str, value: any, aggregate=SET):
+        """
+        updates an entries attributes by finding the entry w/ matching id
+        :param _id: the id of the entry we want to update
+        :param key: attribute name we want to update
+        :param value: value to update to/by
+        :param aggregate: default set
+        https://docs.mongodb.com/manual/reference/operator/aggregation/set/
+        """
+        self.update_by_criteria({"_id": _id}, key, value, aggregate)
+
     def update_all(self, key: str, value: any, aggregate=SET):
         """
         updates the all entries in the collection
@@ -156,7 +142,7 @@ class Collection:
         :param value: value to update to/by
         :param aggregate: default set
         """
-        self.update_entries({}, key, value, aggregate)
+        self.update_by_criteria({}, key, value, aggregate)
 
     # properties functions
     # size, empty, contains id, contains entry
