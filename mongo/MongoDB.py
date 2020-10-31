@@ -15,7 +15,7 @@ class MongoDB:
     def __init__(
             self,
             database: str,
-            docs: dict,
+            collections: dict,
             url: str = None,
             host: str = None,
             port: int = None,
@@ -23,7 +23,7 @@ class MongoDB:
     ):
         """
         :param database: database name to use
-        :param docs: collections in the database
+        :param collections: collections in the database
         :param url: mongodb url
         :param host: connection host
         :param port: connection port
@@ -44,10 +44,10 @@ class MongoDB:
                                "mongo = MongoDB(url=URL, database=DATABASE, docs=COLLECTION)")
         db = cluster[database]
         self.collection = {}
-        for k in docs:  # k -> collection name
-            if docs[k] == DEFAULT:
+        for k in collections:  # k -> collection name
+            if collections[k] == DEFAULT:
                 self.collection[k] = Collection(db, k)
-            if docs[k] == AUTO_INCREMENT:
+            if collections[k] == AUTO_INCREMENT:
                 self.collection[k] = AutoIncrementCollection(db, k)
-            if docs[k] == OBJECT_ID:
+            if collections[k] == OBJECT_ID:
                 self.collection[k] = ObjectIdCollection(db, k)

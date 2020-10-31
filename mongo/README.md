@@ -21,13 +21,13 @@ $ pip3 install dnspython
 ###### Initialization
 Using URL
 ```python
-from MongoDB import *
+from mongo.MongoDB import *
 DATABASE ="UnitTestDB"
 COLLECTIONS = {"TestCollection1": AUTO_INCREMENT, "TestCollection2": DEFAULT}
 URL= "ENTER MONGODB URL HERE"
 mongo = MongoDB(
     database=DATABASE, # the database name you want to use 
-    docs=COLLECTIONS,  # collections you want to store in the db
+    collections=COLLECTIONS,  # collections you want to store in the db
     url=URL # mongodb or localhost url
     )
 tc1 = mongo.collection["TestCollection1"]
@@ -35,7 +35,7 @@ tc2 = mongo.collection["TestCollection2"]
 ```
 Using Host and Port
 ```python
-from MongoDB import *
+from mongo.MongoDB import *
 DATABASE = "UnitTestDB"
 COLLECTIONS = {"TestCollection1": AUTO_INCREMENT, "TestCollection2": DEFAULT}
 HOST = "localhost"
@@ -44,7 +44,7 @@ PORT = 27017
 # b). set up mongodb connection by defining host and port
 mongo = MongoDB(
     database=DATABASE, # the database name you want to use  
-    docs=COLLECTIONS, # collections you want to store in the db
+    collections=COLLECTIONS, # collections you want to store in the db
     host=HOST, # server host
     port=PORT # server port
     )
