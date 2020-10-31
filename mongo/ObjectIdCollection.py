@@ -14,7 +14,7 @@ class ObjectIdCollection(Collection):
         :rtype dict
         :return the entry with the given id
         """
-        return self.find_by_id(ObjectId(_id))
+        return super().find_by_id(ObjectId(_id))
 
     def add(self, entity: dict):
         """
