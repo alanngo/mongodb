@@ -3,9 +3,51 @@ from bson import ObjectId
 
 
 class ObjectIdCollection(Collection):
+    # helper functions
+    @staticmethod
+    def __unwrap_all(elements: list) -> list:
+        ret = []
+        for e in elements:
+            e["_id"] = str(e["_id"])
+            ret.append(e)
+        return ret
+
+    @staticmethod
+    def __unwrap(element: dict) -> dict:
+        ret = element
+        ret["_id"] = str(element["_id"])
+        return ret
+
     # constructor
     def __init__(self, db, document):
         super().__init__(db, document)
+
+    def find_by_criteria(self, criteria: dict) -> list:
+        """
+        retrieves every entry in the database based on a criteria dictionary
+        :param criteria: dictionary of criteria listing
+        :rtype list
+        :return every element in the database that satisfies the criteria w/ unwrapped id
+        """
+        return self.__unwrap_all(super().find_by_criteria(criteria))
+
+    def find_where(self, key: str, value: any) -> list:
+        """
+        find entries based on key-value entry
+        :param key: criteria key
+        :param value: criteria value
+        :rtype list
+        :return the entries w/ unwrapped id
+        """
+        return self.__unwrap_all(super().find_where(key, value))
+
+    def find_all(self) -> list:
+        """
+        retrieves every entry in the database
+        :rtype list
+        :return every element in the database w/ unwrapped id
+        """
+        return self.__unwrap_all(super().find_all())
 
     def find_by_id(self, _id: any) -> dict:
         """
@@ -14,7 +56,7 @@ class ObjectIdCollection(Collection):
         :rtype dict
         :return the entry with the given id
         """
-        return super().find_by_id(ObjectId(_id))
+        return self.__unwrap(super().find_by_id(ObjectId(_id)))
 
     def add(self, entity: dict):
         """
