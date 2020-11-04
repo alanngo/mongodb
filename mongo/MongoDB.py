@@ -3,12 +3,14 @@ from pymongo import *
 from .AutoIncrementCollection import *
 from .ObjectIdCollection import *
 from .Collection import *
+from .MongoError import *
 
 DEFAULT = 0
 AUTO_INCREMENT = 1
 OBJECT_ID = 2
 
 
+# MongoDB Wrapper Class
 class MongoDB:
 
     # constructor
@@ -27,22 +29,24 @@ class MongoDB:
         :param url: mongodb url
         :param host: connection host
         :param port: connection port
-        :raises RuntimeError: raised in the following cases
+        :raises MongoError: raised in the following cases
                 - host/port specified w/o port/host
                 - url specified w/ host and/or port
         """
         if host is None and port is None and url is None:
-            cluster = MongoClient("localhost", 27017)  # default connection
+            connection = MongoClient("localhost", 27017)  # default connection
         elif (host is not None and port is not None) and (url is None):
-            cluster = MongoClient(host, port)  # user-specified connection
+            connection = MongoClient(host, port)  # user-specified connection
         elif (host is None and port is None) and (url is not None):
-            cluster = MongoClient(url)  # cluster connection
+            connection = MongoClient(url)  # url-based connection
         else:
-            raise RuntimeError("USAGE:\n"
-                               "mongo = MongoDB(host=HOST, port=PORT, database=DATABASE, docs=COLLECTION)\n"
-                               "or\n"
-                               "mongo = MongoDB(url=URL, database=DATABASE, docs=COLLECTION)")
-        db = cluster[database]
+            raise MongoError("USAGE:\n"
+                             "mongo = MongoDB(database=DATABASE, collections=COLLECTION)\n"
+                             "or\n"
+                             "mongo = MongoDB(host=HOST, port=PORT, database=DATABASE, collections=COLLECTION)\n"
+                             "or\n"
+                             "mongo = MongoDB(url=URL, database=DATABASE, collections=COLLECTION)")
+        db = connection[database]
         self.collection = {}
         for k in collections:  # k -> collection name
             if collections[k] == DEFAULT:

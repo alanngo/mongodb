@@ -1,3 +1,4 @@
+from .MongoError import *
 SET = "set"  # sets an document's field to a new value
 UNSET = "unset"  # unset a document's field
 PUSH = "push"  # pushes an element into a document's array field
@@ -58,10 +59,10 @@ class Collection:
         """
         adds an entry to the database with type ObjectId
         :param entity: the object entity to add
-        :raises RuntimeError: if no id KV pair is specified
+        :raises MongoError: if no id KV pair is specified
         """
         if "_id" not in entity.keys():
-            raise RuntimeError("No id specified")
+            raise MongoError("No id specified")
         self._collection.insert_one(entity)
 
     def add_all(self, entries: list):
@@ -78,14 +79,14 @@ class Collection:
         :param _id: the new id to add
         :param entity: the object entity to add
         :except Exception: general exception
-        :raises RuntimeError: error propagated error in try block
+        :raises MongoError: error propagated error in try block
         """
         try:
             stub = {'_id': _id}
             stub.update(entity)
             self._collection.insert_one(stub)
         except Exception as e:
-            raise RuntimeError(f"Caused by: {e}")
+            raise MongoError(f"Caused by: {e}")
 
     # removal functions
     # id, criteria, all
@@ -118,9 +119,10 @@ class Collection:
         :param key: attribute name we want to update
         :param value: value to update to/by
         :param aggregate: default set
+        :raises MongoError: raised if user tries to modify the _id field
         """
         if key == "_id":
-            raise RuntimeError("You are not allowed to update the object's id")
+            raise MongoError("You are not allowed to update the object's id")
         updated = {f"${aggregate}": {key: value}}
         self._collection.update_many(criteria, updated)
 
