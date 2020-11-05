@@ -31,15 +31,16 @@ class ObjectIdCollection(Collection):
         """
         return self.__unwrap_all(super().find_by_criteria(criteria))
 
-    def find_where(self, key: str, value: any) -> list:
+    def find_where(self, key: str, value: any, aggregate=EQ) -> list:
         """
         find entries based on key-value entry
         :param key: criteria key
         :param value: criteria value
+        :param aggregate: default equals
         :rtype list
         :return the entries w/ unwrapped id
         """
-        return self.__unwrap_all(super().find_where(key, value))
+        return self.__unwrap_all(super().find_where(key, value, aggregate))
 
     def find_all(self) -> list:
         """

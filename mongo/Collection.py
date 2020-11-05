@@ -1,9 +1,6 @@
 from .MongoError import *
-SET = "set"  # sets an document's field to a new value
-UNSET = "unset"  # unset a document's field
-PUSH = "push"  # pushes an element into a document's array field
-POP = "pop"  # removes either the first or last element in an array
-INC = "inc"  # increments a document's numerical field
+from .FindQueries import *
+from .UpdateQueries import *
 
 
 class Collection:
@@ -31,15 +28,16 @@ class Collection:
         """
         return self.find_by_criteria({})
 
-    def find_where(self, key: str, value: any) -> list:
+    def find_where(self, key: str, value: any, aggregate=EQ) -> list:
         """
         find entries based on key-value entry
         :param key: criteria key
         :param value: criteria value
+        :param aggregate: default equals
         :rtype list
         :return the entries with the associated criteria
         """
-        return self.find_by_criteria({key: value})
+        return self.find_by_criteria({key: {f"${aggregate}": value}})
 
     def find_by_id(self, _id: any) -> dict:
         """
