@@ -1,5 +1,7 @@
 # MongoDB Wrapper Class
 ###### Prereqs
+Use this well and keep up to date
+
 ```bash
 $ pip3 install pymongo
 $ pip3 install dnspython
